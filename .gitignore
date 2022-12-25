@@ -55,3 +55,6 @@ dkms.conf
 *.jpg
 *.png
 *.svg
+
+# Output folder where generated images will be stored
+Output/*
