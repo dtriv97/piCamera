@@ -58,3 +58,6 @@ dkms.conf
 
 # Output folder where generated images will be stored
 Output/*
+
+# VSCode debug folder
+.vscode/*
