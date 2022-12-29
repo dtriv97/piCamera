@@ -3,56 +3,52 @@ from picamera import PiCamera
 from fractions import Fraction
 from time import sleep
 
-"""
------------- Setup Vars ------------
-"""
-# Time taken for Pi Camera to intialise
-camInitTime = 2
+class CameraMod():
+    # Default Vars
+    outputFolder = "Output/"
+    imgOutput = outputFolder + "img.jpg"
+    closeDelay = 6
 
-outputFolder = "Output/"
+    def __init__(self, initType: str = None, outputName: str = None):
+        if os.path.isdir(self.outputFolder):
+            pass
+        else:
+            os.mkdir(self.outputFolder)
+        
+        # Set image file name to 'outputName' if given
+        if outputName:
+            self.imgOutput = outputName
 
-# Image file output name
-imgOutput = outputFolder + "img.jpg"
+        self.camera = PiCamera()
 
-"""
-------------- Main Code -------------
-"""
-def init(initType: str = None) -> PiCamera:
-    if os.path.isdir(outputFolder):
-        pass
-    else:
-        os.mkdir(outputFolder)
+        # Common camera settings for all mode types
+        self.camera.resolution = (1920, 1080)
+        self.camera.contrast = 10
+        self.camera.hflip = True
+        self.camera.vflip = True
+        delayTime = 5
 
-    camera = PiCamera()
+        # Special parameters for long exposure image
+        if initType == 'longExpo':
+            self.camera.framerate = Fraction(1, 30)
+            self.camera.sensor_mode = 3
+            self.camera.shutter_speed = 500000
+            self.camera.iso = 400
+            self.camera.exposure_mode = 'off'
+            delayTime = 30
 
-    # Common camera settings for all mode types
-    camera.resolution = (1920, 1080)
-    camera.contrast = 10
-    camera.hflip = True
-    camera.vflip = True
-    sleep(5)
-
-    # Special parameters for long exposure image
-    if initType == 'longExpo':
-        camera.framerate = Fraction(1, 30)
-        camera.sensor_mode = 3
-        camera.shutter_speed = 500000
-        camera.iso = 400
-        camera.exposure_mode = 'off'
-        sleep(30)
-
-    return camera
-
-def captureImage(camera):
-    camera.capture(imgOutput)
-    print("Image captured")
-    sleep(6)
-    camera.close()
-    print("Camera closed")
+        self.sleep(delayTime)
+    
+    def takeImage(self):
+        self.camera.capture(self.imgOutput)
+        print("Image captured")
+        sleep(self.closeDelay)
+        self.camera.close()
+        print("Camera closed")
 
 def main():
-    camera = init('longExpo')
-    captureImage(camera)
+    cam = CameraMod()
+    cam.takeImage()
 
 if __name__ == '__main__':
     main()
