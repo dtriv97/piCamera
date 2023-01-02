@@ -32,12 +32,12 @@ class CameraMod():
         if initType == 'longExpo':
             self.camera.framerate = Fraction(1, 30)
             self.camera.sensor_mode = 3
-            self.camera.shutter_speed = 500000
+            self.camera.shutter_speed = 1000000
             self.camera.iso = 400
             self.camera.exposure_mode = 'off'
             delayTime = 30
 
-        self.sleep(delayTime)
+        sleep(delayTime)
     
     def takeImage(self):
         self.camera.capture(self.imgOutput)
